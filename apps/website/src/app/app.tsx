@@ -5,9 +5,10 @@ import NxWelcome from './nx-welcome';
 export function App() {
   return (
     <div>
-      <NxWelcome title="website" />
+      <NxWelcome title="New title" />
     </div>
   );
 }
 
 export default App;
+
