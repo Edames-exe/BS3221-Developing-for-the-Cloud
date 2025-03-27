@@ -10,3 +10,10 @@ export class AppController {
     return this.appService.getData();
   }
 }
+
+// @POST add submission - User, Location
+
+// @GET getWardens
+
+// @Get Submissions
+// @update UpdateSubmission - user, role?, submissionID
