@@ -1,76 +1,43 @@
-// Uncomment this line to use CSS modules
-// import styles from './app.module.css';
-
-// export function App() {
-//   return (
-//     <div>
-//     </div>
-//   );
-// }
+// import React from 'react';
+// import { Routes, Route, Navigate } from 'react-router-dom';
+// import LoginPage from './pages/loginPage';
+// import HomePage from './pages/homePage';
+//
+// const App: React.FC = () => (
+//   <Routes>
+//     <Route path="/" element={<LoginPage />} />
+//     <Route path="/home" element={<HomePage />} />
+//     {/* Fallback to login */}
+//     <Route path="*" element={<Navigate to="/" replace />} />
+//   </Routes>
+// );
 //
 // export default App;
-//
-//
+
+// src/app/App.tsx
 import React from 'react';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import 'apps/website/src/styles.css';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import LoginPage from './pages/loginPage';
+import HomePage  from './pages/homePage';
+import RequireAuth from './components/requireAuth';
 
-function NavBar() {
-  return (
-    <nav className="navbar">
-      <div className="logo">LOGO</div>
-      <ul className="nav-links">
-        <li>Home</li>
-        <li>Entered Records</li>
-        <li>Other Stuff</li>
-      </ul>
-    </nav>
-  );
-}
+const App: React.FC = () => (
+  <Routes>
+    {/* Public route */}
+    <Route path="/" element={<LoginPage />} />
 
-function Stats() {
-  return (
-    <div className="stats">
-      <h2>No. Wardens on Site</h2>
-      <p>Areas</p>
-      <p>% of rooms covered by wardens</p>
-    </div>
-  );
-}
-
-function EnterDetailsForm() {
-  return (
-    <div className="enter-details">
-      <h2>Enter Details</h2>
-      <form>
-        <div className="form-group">
-          <label htmlFor="name">Name:</label>
-          <input id="name" type="text" placeholder="Enter name" />
-        </div>
-        <div className="form-group">
-          <label htmlFor="staffNo">Staff No.:</label>
-          <input id="staffNo" type="text" placeholder="Enter staff number" />
-        </div>
-        <div className="form-group">
-          <label htmlFor="location">Location:</label>
-          <input id="location" type="text" placeholder="Enter location" />
-        </div>
-        <button type="submit">Submit</button>
-      </form>
-    </div>
-  );
-}
-
-function App() {
-  return (
-    <div className="App">
-      <NavBar />
-      <div className="container">
-        <Stats />
-        <EnterDetailsForm />
-      </div>
-    </div>
-  );
-}
+    {/* Protected routes */}
+    <Route
+      path="/home"
+      element={
+        <RequireAuth>
+          <HomePage />
+        </RequireAuth>
+      }
+    />
+    {/* Catch-all */}
+    <Route path="*" element={<Navigate to="/" replace />} />
+  </Routes>
+);
 
 export default App;

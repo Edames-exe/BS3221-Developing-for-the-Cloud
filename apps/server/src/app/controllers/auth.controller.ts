@@ -1,13 +1,17 @@
-
-import { Body, Controller, Get, Headers, HttpException, Post, Req } from '@nestjs/common';
-import { LoginReqDTO } from '../DTOs/loginReq.dto';
+// src/auth/auth.controller.ts
+import { Controller, Headers, HttpException, Post } from '@nestjs/common';
 
 @Controller('auth')
 export class AuthController {
   @Post('login')
-  login(@Body() body: LoginReqDTO, @Headers() headers: any): string {
-    if (body.role != 'admin') { throw new HttpException('Not allowed!', 401)}
-
-    return headers
+  login(
+    @Headers('username') username: string,
+    @Headers('password') password: string
+  ): any {
+    // Temporary hard‑coded check
+    if (username === 'james' && password === 'james') {
+      return { username, role: 'admin', token: 'fake-jwt-token' };
+    }
+    throw new HttpException('Invalid credentials', 401);
   }
 }

@@ -6,6 +6,7 @@ export class LoginReqDTO {
   @IsOptional()
   username: string;
 
-  @IsString()
-  role: string;
+  password: string;
+  // @IsString()
+  // role: string;
 }
