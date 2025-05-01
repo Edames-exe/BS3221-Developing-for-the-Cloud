@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  mysql:
+    container_name: mysql-dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: YourStrong!Passw0rd
+      MYSQL_DATABASE: firewarden_db
+      MYSQL_USER: warden_user
+      MYSQL_PASSWORD: YourUser!Passw0rd
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:
+    driver: local
