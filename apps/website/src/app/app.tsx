@@ -1,19 +1,3 @@
-// import React from 'react';
-// import { Routes, Route, Navigate } from 'react-router-dom';
-// import LoginPage from './pages/loginPage';
-// import HomePage from './pages/homePage';
-//
-// const App: React.FC = () => (
-//   <Routes>
-//     <Route path="/" element={<LoginPage />} />
-//     <Route path="/home" element={<HomePage />} />
-//     {/* Fallback to login */}
-//     <Route path="*" element={<Navigate to="/" replace />} />
-//   </Routes>
-// );
-//
-// export default App;
-
 // src/app/App.tsx
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
