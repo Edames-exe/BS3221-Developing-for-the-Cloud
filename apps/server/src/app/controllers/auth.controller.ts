@@ -1,17 +1,19 @@
-// src/auth/auth.controller.ts
-import { Controller, Headers, HttpException, Post } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
+import { AuthService } from '../services/auth.service';
+import { LoginDto } from '../DTOs/login.dto';
+import { RegisterDto } from '../DTOs/register.dto';
 
 @Controller('auth')
 export class AuthController {
+  constructor(private authService: AuthService) {}
+
+  @Post('register')
+  register(@Body() dto: RegisterDto) {
+    return this.authService.register(dto);
+  }
+
   @Post('login')
-  login(
-    @Headers('username') username: string,
-    @Headers('password') password: string
-  ): any {
-    // Temporary hard‑coded check
-    if (username === 'james' && password === 'james') {
-      return { username, role: 'admin', token: 'fake-jwt-token' };
-    }
-    throw new HttpException('Invalid credentials', 401);
+  login(@Body() dto: LoginDto) {
+    return this.authService.login(dto);
   }
 }
