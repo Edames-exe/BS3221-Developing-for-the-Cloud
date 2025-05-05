@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from '../entities/user.entity';
-import { CreateUserDto } from '../DTOs/createUser.dto';
+import { UserDto } from '../DTOs/user.dto';
 
 @Injectable()
 export class UsersService {
@@ -12,16 +12,32 @@ export class UsersService {
     private usersRepo: Repository<User>,
   ) {}
 
-  async create(createDto: CreateUserDto): Promise<User> {
-    const hash = await bcrypt.hash(createDto.password, 10);
+  async create(dto: UserDto): Promise<User> {
+
+    const hash = await bcrypt.hash(dto.password, 10);
+
     const user = this.usersRepo.create({
-      username: createDto.username,
+      staffNum: dto.staffNum,
+      username: dto.username,
       password: hash,
+      isAdmin: dto.isAdmin ?? false,
+      active:  dto.active  ?? false,
     });
+
     return this.usersRepo.save(user);
   }
 
+  /**
+   * Lookup by username (for login):
+   */
   async findByUsername(username: string): Promise<User | undefined> {
     return this.usersRepo.findOne({ where: { username } });
+  }
+
+  /**
+   * (Optional) If you need to find by staffNum elsewhere:
+   */
+  async findByStaffNum(staffNum: string): Promise<User | undefined> {
+    return this.usersRepo.findOne({ where: { staffNum } });
   }
 }

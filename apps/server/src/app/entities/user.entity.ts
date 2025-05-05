@@ -1,16 +1,20 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+// apps/server/src/app/entities/user.entity.ts
+import { Entity, Column, PrimaryColumn } from 'typeorm';
 
 @Entity('users')
 export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryColumn({ name: 'StaffNum', type: 'varchar', length: 50 })
+  staffNum: string;
 
-  @Column({ unique: true })
+  @Column({ name: 'Username',   type: 'varchar', length: 255, unique: true })
   username: string;
 
-  @Column()
+  @Column({ name: 'Password',   type: 'varchar', length: 255 })
   password: string;
 
-  @Column({ default: 'warden' })
-  role: string;
+  @Column({ name: 'isAdmin',    type: 'tinyint', width: 1, default: 0 })
+  isAdmin: boolean;
+
+  @Column({ name: 'Active',     type: 'tinyint', width: 1, default: 0 })
+  active: boolean;
 }

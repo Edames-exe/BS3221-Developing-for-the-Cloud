@@ -1,9 +1,11 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+//apps/server/src/app/services/auth.service.ts
+import { Injectable, UnauthorizedException, HttpException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from './users.service';
 import { LoginDto } from '../DTOs/login.dto';
 import { RegisterDto } from '../DTOs/register.dto';
+import { UserDto } from '../DTOs/user.dto';
 
 @Injectable()
 export class AuthService {
@@ -13,9 +15,22 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto) {
-    const user = await this.usersService.create(dto);
-    const payload = { username: user.username, sub: user.id, role: user.role };
-    return { access_token: this.jwtService.sign(payload) };
+    const createDto: UserDto = {
+      staffNum: dto.staffNum,
+      username: dto.username,
+      password: dto.password,
+      active: false, // new users start inactive
+    };
+
+    const user = await this.usersService.create(createDto);
+
+    const tokenPayload = {
+      username: user.username,
+      sub: user.staffNum,
+      isAdmin: user.isAdmin,
+    };
+
+    return { access_token: this.jwtService.sign(tokenPayload) };
   }
 
   async validateUser(username: string, pass: string): Promise<any> {
@@ -32,7 +47,17 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    const payload = { username: user.username, sub: user.id, role: user.role };
-    return { access_token: this.jwtService.sign(payload) };
+    if (!user.active) {
+      // Reject inactive users
+      throw new HttpException('User is not active', 403);
+    }
+
+    const tokenPayload = {
+      username: user.username,
+      sub: user.staffNum,
+      isAdmin: user.isAdmin,
+    };
+
+    return { access_token: this.jwtService.sign(tokenPayload) };
   }
 }

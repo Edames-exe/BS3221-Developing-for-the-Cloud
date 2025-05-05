@@ -27,10 +27,9 @@ const LoginPage: React.FC = () => {
     try {
       const { data } = await axios.post(
         '/api/auth/login',
-        {},
-        { headers: { username, password } }
+        { username, password }
       );
-          localStorage.setItem('user',
+      localStorage.setItem('user',
             JSON.stringify({
               user: data,
               loginTime: Date.now(),
@@ -47,37 +46,50 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="App">
-      <NavBar />
-      <div className="container">
-        <div className="enter-details">
-          <h2>Fire Warden Login</h2>
-          {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="username">Username:</label>
-              <input
-                id="username"
-                type="text"
-                placeholder="Enter username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="password">Password:</label>
-              <input
-                id="password"
-                type="password"
-                placeholder="Enter password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <button type="submit">Log In</button>
-          </form>
+    <div className="background">
+      <div className="card">
+        <h1 className="title">Welcome</h1>
+
+        {error && <div className="login-error">{error}</div>}
+
+        <form className="form" onSubmit={handleSubmit}>
+          <label className="label" htmlFor="username">
+            Username
+          </label>
+          <input
+            id="username"
+            type="text"
+            className="input"
+            placeholder="Enter your username"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            required
+          />
+
+          <label className="label" htmlFor="password">
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            className="input"
+            placeholder="Enter your password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            required
+          />
+
+          <div className="link">
+            <a href="#">Forgot Password?</a>
+          </div>
+
+          <button type="submit" className="button">
+            Login
+          </button>
+        </form>
+
+        <div className="link">
+          Don’t have an account? <a href="register">Sign Up</a>
         </div>
       </div>
     </div>

@@ -2,13 +2,15 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/loginPage';
-import HomePage  from './pages/homePage';
+import RegisterPage from './pages/registerPage';
+import HomePage from './pages/homePage';
 import RequireAuth from './components/requireAuth';
 
 const App: React.FC = () => (
   <Routes>
-    {/* Public route */}
+    {/* Public routes */}
     <Route path="/" element={<LoginPage />} />
+    <Route path="/register" element={<RegisterPage />} />
 
     {/* Protected routes */}
     <Route
@@ -19,6 +21,7 @@ const App: React.FC = () => (
         </RequireAuth>
       }
     />
+
     {/* Catch-all */}
     <Route path="*" element={<Navigate to="/" replace />} />
   </Routes>
