@@ -3,8 +3,10 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import 'apps/website/src/styles.css';
+// Import logo image
+import logo from '../../assets/Univeristy-of-Winchester.webp';
 
-// NavBar component as a floating thin box
+// NavBar component as a floating thin box using .card style
 function NavBar() {
   const navigate = useNavigate();
   return (
@@ -25,8 +27,8 @@ function NavBar() {
         zIndex: 1000,
       }}
     >
-      <div className="logo" onClick={() => navigate('/home')} style={{ cursor: 'pointer' }}>
-        LOGO
+      <div onClick={() => navigate('/home')} style={{ cursor: 'pointer' }}>
+        <img src={logo} alt="University of Winchester Logo" style={{ height: '50px' }} />
       </div>
       <ul className="nav-links" style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', gap: '1rem' }}>
         <li onClick={() => navigate('/home')} style={{ cursor: 'pointer' }}>Home</li>
@@ -39,42 +41,42 @@ function NavBar() {
 
 const HomePage: React.FC = () => {
   return (
-    <div className="background" style={{ paddingTop: '80px' }}>
+    <div className="background" style={{ paddingTop: '80px', alignItems: 'flex-start' }}>
       <NavBar />
       <div
         className="home-container"
         style={{
           display: 'flex',
           flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          alignItems: 'stretch',
           gap: '1.5rem',
-          padding: '2rem',
+          width: '100%',
+          maxWidth: '1200px',
+          margin: '0 auto',
+          padding: '1rem',
         }}
       >
         {/* Stats Card */}
-        <div className="card" style={{ maxWidth: '360px', flex: '0 0 360px' }}>
+        <div className="card" style={{ flex: 1, minWidth: '300px' }}>
           <h2 className="title">No. Wardens on Site</h2>
           <p>Areas</p>
           <p>% of rooms covered by wardens</p>
         </div>
 
         {/* Entry Form Card */}
-        <div className="card" style={{ maxWidth: '360px', flex: '0 0 360px' }}>
+        <div className="card" style={{ flex: 1, minWidth: '300px' }}>
           <h2 className="title">Enter Details</h2>
           <form className="form">
-            <div className="form-group">
-              <label htmlFor="name">Name:</label>
-              <input id="name" type="text" placeholder="Enter name" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="staffNo">Staff No.:</label>
-              <input id="staffNo" type="text" placeholder="Enter staff number" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="location">Location:</label>
-              <input id="location" type="text" placeholder="Enter location" />
-            </div>
+            <label htmlFor="name" className="label">Name:</label>
+            <input id="name" type="text" placeholder="Enter name" className="input" />
+
+            <label htmlFor="staffNo" className="label">Staff No.:</label>
+            <input id="staffNo" type="text" placeholder="Enter staff number" className="input" />
+
+            <label htmlFor="location" className="label">Location:</label>
+            <input id="location" type="text" placeholder="Enter location" className="input" />
+
             <button type="submit" className="button">Submit</button>
           </form>
         </div>
