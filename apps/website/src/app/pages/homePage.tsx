@@ -50,7 +50,7 @@ const StatsCard: React.FC = () => (
   </section>
 );
 
-const EnterFormCard: React.FC = () => {
+const EnterFormCard: React.FC<{ onReportSubmitted?: () => void }> = ({ onReportSubmitted }) => {
   const stored = localStorage.getItem('warden');
   const { staffNum = '', username = '' } = stored ? JSON.parse(stored) : {};
   const [name, setName] = useState(username);
@@ -69,8 +69,17 @@ const EnterFormCard: React.FC = () => {
     e.preventDefault();
     if (!locationId) return setMessage({ text: 'Select a location', type: 'error' });
     try {
-      await axios.post('/api/records', { staffNum, locationId, startTime: new Date().toISOString(), endTime: null });
+      await axios.post('/api/records', {
+        staffNum,
+        locationId,
+        startTime: new Date().toISOString(),
+        endTime: null
+      });
       setMessage({ text: 'Record saved', type: 'success' });
+      // Clear form
+      setLocationId('');
+      // Refresh records if callback provided
+      if (onReportSubmitted) onReportSubmitted();
     } catch {
       setMessage({ text: 'Save failed', type: 'error' });
     }
@@ -146,9 +155,11 @@ const RecordsCard: React.FC = () => {
       <ul className="records-list">
         {records.map(r => (
           <li key={r.id} className="record-item">
-            <div><strong>Location:</strong> {r.location.name}</div>
-            <div><strong>Start:</strong> {new Date(r.startTime).toLocaleString()}</div>
-            <div><strong>End:</strong> {r.endTime ? new Date(r.endTime).toLocaleString() : '—'}</div>
+            <div className="record-content">
+              <div><strong>Location:</strong> {r.location.name}</div>
+              <div><strong>Start:</strong> {new Date(r.startTime).toLocaleString()}</div>
+              <div><strong>End:</strong> {r.endTime ? new Date(r.endTime).toLocaleString() : '—'}</div>
+            </div>
             {!r.endTime && (
               <button className="button end-button" onClick={() => endRecord(r.id)}>
                 End
@@ -161,22 +172,29 @@ const RecordsCard: React.FC = () => {
   );
 };
 
-const HomePage: React.FC = () => (
-  <div className="background">
-    <NavBar />
-    <main className="content">
-      <div className="two-column-layout">
-        <div className="left-column">
-          <StatsCard />
-          <div className="form-card-spacing"></div> {/* New spacing element */}
-          <EnterFormCard />
-        </div>
-        <div className="right-column">
-          <RecordsCard />
-        </div>
-      </div>
-    </main>
-  </div>
-);
+const HomePage: React.FC = () => {
+  const [refreshKey, setRefreshKey] = useState(0);
 
+  const handleReportSubmitted = () => {
+    setRefreshKey(prev => prev + 1); // This will force RecordsCard to refresh
+  };
+
+  return (
+    <div className="background">
+      <NavBar />
+      <main className="content">
+        <div className="two-column-layout">
+          <div className="left-column">
+            <StatsCard />
+            <div className="form-card-spacing"></div>
+            <EnterFormCard onReportSubmitted={handleReportSubmitted} />
+          </div>
+          <div className="right-column">
+            <RecordsCard key={refreshKey} />
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+};
 export default HomePage;
