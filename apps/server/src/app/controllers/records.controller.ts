@@ -1,10 +1,16 @@
-import { Body, Controller, Headers, Post } from '@nestjs/common';
-import { RecordDTO } from '../DTOs/record.dto';
+import { Controller, Post, Body } from '@nestjs/common';
+import { LocationRecordsService } from '../services/location-records.service';
+import { CreateLocationRecordDto } from '../DTOs/createLocationRecord.dto';
+import { LocationRecord } from '../entities/location_record.entity';
 
 @Controller('records')
 export class RecordsController {
-  @Post('newRecord')
-  newRecord(@Body() body: RecordDTO, @Headers() headers: any): string {
-    return headers
+  constructor(private recordsService: LocationRecordsService) {}
+
+  @Post()
+  async createRecord(
+    @Body() dto: CreateLocationRecordDto,
+  ): Promise<LocationRecord> {
+    return this.recordsService.create(dto);
   }
 }

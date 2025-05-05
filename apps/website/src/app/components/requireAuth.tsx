@@ -1,21 +1,43 @@
 import React, { JSX } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
-interface Props {
-  children: JSX.Element;
+interface WardenInfo {
+  token: string;
+  loginTime: number;
+  staffNum: string;
+  username: string;
+  isAdmin: boolean;
 }
 
-const RequireAuth: React.FC<Props> = ({ children }) => {
-  // Check for your “logged-in” flag; adjust key if you used something else
-  const isLoggedIn = Boolean(localStorage.getItem('user'));
-  const location = useLocation();
+const SESSION_TTL = 30 * 60 * 1000; // 30 minutes in ms
 
-  if (!isLoggedIn) {
-    // Redirect to “/” (login), but keep the attempted URL in state
+const RequireAuth: React.FC<{ children: JSX.Element }> = ({ children }) => {
+  const location = useLocation();
+  const raw = localStorage.getItem('warden');
+
+  if (!raw) {
+    // no session
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 
-  return children;
+  try {
+    const session = JSON.parse(raw) as WardenInfo;
+    const { loginTime } = session;
+    const now = Date.now();
+
+    if (now - loginTime > SESSION_TTL) {
+      // session expired
+      localStorage.removeItem('warden');
+      return <Navigate to="/" state={{ from: location }} replace />;
+    }
+
+    // valid session
+    return children;
+  } catch {
+    // malformed data
+    localStorage.removeItem('warden');
+    return <Navigate to="/" state={{ from: location }} replace />;
+  }
 };
 
 export default RequireAuth;

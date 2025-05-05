@@ -1,19 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import 'apps/website/src/styles.css';
-
-// Configure Axios to point to the NestJS backend
-axios.defaults.baseURL = 'http://localhost:3000';
-
-function NavBar() {
-  return (
-    <nav className="navbar">
-      <div className="logo">LOGO</div>
-    </nav>
-  );
-}
+// Import logo image
+import logo from '../../assets/Univeristy-of-Winchester.webp';
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -24,17 +15,24 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
     try {
-      const { data } = await axios.post(
-        '/api/auth/login',
-        { username, password }
-      );
-      localStorage.setItem('user',
-            JSON.stringify({
-              user: data,
-              loginTime: Date.now(),
-              })
-          );
+      const { data } = await axios.post('/api/auth/login', { username, password });
+      // Decode token to extract user details
+      const token = data.access_token;
+      const decoded = JSON.parse(window.atob(token.split('.')[1]));
+      const wardenInfo = {
+        token,
+        loginTime: Date.now(),
+        staffNum: decoded.sub,
+        username: decoded.username,
+        isAdmin: decoded.isAdmin,
+      };
+      // Store full warden info
+      localStorage.setItem('warden', JSON.stringify(wardenInfo));
+      // Set default Authorization header
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
       navigate('/home');
     } catch (err: any) {
       if (err.response?.status === 401) {
@@ -48,48 +46,36 @@ const LoginPage: React.FC = () => {
   return (
     <div className="background">
       <div className="card">
-        <h1 className="title">Welcome</h1>
-
+        <img src={logo} alt="University Logo" style={{ height: '60px', marginBottom: '1rem' }} />
+        <h1 className="title">Log In</h1>
         {error && <div className="login-error">{error}</div>}
-
         <form className="form" onSubmit={handleSubmit}>
-          <label className="label" htmlFor="username">
-            Username
-          </label>
+          <label htmlFor="username" className="label">Username</label>
           <input
             id="username"
             type="text"
             className="input"
-            placeholder="Enter your username"
+            placeholder="Enter username"
             value={username}
             onChange={e => setUsername(e.target.value)}
             required
           />
 
-          <label className="label" htmlFor="password">
-            Password
-          </label>
+          <label htmlFor="password" className="label">Password</label>
           <input
             id="password"
             type="password"
             className="input"
-            placeholder="Enter your password"
+            placeholder="Enter password"
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
           />
 
-          <div className="link">
-            <a href="#">Forgot Password?</a>
-          </div>
-
-          <button type="submit" className="button">
-            Login
-          </button>
+          <button type="submit" className="button">Log In</button>
         </form>
-
         <div className="link">
-          Don’t have an account? <a href="register">Sign Up</a>
+          Don’t have an account? <Link to="/register">Sign Up</Link>
         </div>
       </div>
     </div>
