@@ -42,71 +42,69 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="background">
-      <div className="card">
-        <h1 className="title">Sign Up</h1>
+    <div className="login-container">
+      <div className="login-card">
+        <h1 className="login-title">Sign Up</h1>
 
         {error && <div className="login-error">{error}</div>}
 
-        <form className="form" onSubmit={handleSubmit}>
-          <label className="label" htmlFor="staffNum">
-            Staff Number
-          </label>
-          <input
-            id="staffNum"
-            type="text"
-            className="input"
-            placeholder="Enter your staff number"
-            value={staffNum}
-            onChange={e => setStaffNum(e.target.value)}
-            required
-          />
+        <form className="login-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label className="label" htmlFor="staffNum">Staff Number</label>
+            <input
+              id="staffNum"
+              type="text"
+              className="input"
+              placeholder="Enter your staff number"
+              value={staffNum}
+              onChange={e => setStaffNum(e.target.value)}
+              required
+            />
+          </div>
 
-          <label className="label" htmlFor="username">
-            Username
-          </label>
-          <input
-            id="username"
-            type="text"
-            className="input"
-            placeholder="Choose a username"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-            required
-          />
+          <div className="form-group">
+            <label className="label" htmlFor="username">Username</label>
+            <input
+              id="username"
+              type="text"
+              className="input"
+              placeholder="Choose a username"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              required
+            />
+          </div>
 
-          <label className="label" htmlFor="password">
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            className="input"
-            placeholder="Enter a password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            required
-          />
+          <div className="form-group">
+            <label className="label" htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              className="input"
+              placeholder="Enter a password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
+          </div>
 
-          <label className="label" htmlFor="confirmPassword">
-            Re-enter Password
-          </label>
-          <input
-            id="confirmPassword"
-            type="password"
-            className="input"
-            placeholder="Re-enter your password"
-            value={confirmPassword}
-            onChange={e => setConfirmPassword(e.target.value)}
-            required
-          />
+          <div className="form-group">
+            <label className="label" htmlFor="confirmPassword">Re-enter Password</label>
+            <input
+              id="confirmPassword"
+              type="password"
+              className="input"
+              placeholder="Re-enter your password"
+              value={confirmPassword}
+              onChange={e => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
 
-          <button type="submit" className="button">
-            Register
-          </button>
+          <button type="submit" className="button login-button">Register</button>
         </form>
 
-        <div className="link">
+        <div className="login-footer">
           Already have an account? <Link to="/">Login</Link>
         </div>
       </div>
