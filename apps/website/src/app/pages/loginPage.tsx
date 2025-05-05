@@ -44,38 +44,42 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="background">
-      <div className="card">
-        <img src={logo} alt="University Logo" style={{ height: '60px', marginBottom: '1rem' }} />
-        <h1 className="title">Log In</h1>
+    <div className="login-container">
+      <div className="login-card">
+        <img src={logo} alt="University Logo" className="login-logo" />
+        <h1 className="login-title">Log In</h1>
         {error && <div className="login-error">{error}</div>}
-        <form className="form" onSubmit={handleSubmit}>
-          <label htmlFor="username" className="label">Username</label>
-          <input
-            id="username"
-            type="text"
-            className="input"
-            placeholder="Enter username"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-            required
-          />
+        <form className="login-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="username" className="label">Username</label>
+            <input
+              id="username"
+              type="text"
+              className="input"
+              placeholder="Enter username"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              required
+            />
+          </div>
 
-          <label htmlFor="password" className="label">Password</label>
-          <input
-            id="password"
-            type="password"
-            className="input"
-            placeholder="Enter password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            required
-          />
+          <div className="form-group">
+            <label htmlFor="password" className="label">Password</label>
+            <input
+              id="password"
+              type="password"
+              className="input"
+              placeholder="Enter password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
+          </div>
 
-          <button type="submit" className="button">Log In</button>
+          <button type="submit" className="button login-button">Log In</button>
         </form>
-        <div className="link">
-          Don’t have an account? <Link to="/register">Sign Up</Link>
+        <div className="login-footer">
+          Don't have an account? <Link to="/register">Sign Up</Link>
         </div>
       </div>
     </div>

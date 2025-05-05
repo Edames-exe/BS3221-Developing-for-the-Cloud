@@ -1,3 +1,5 @@
+// apps/server/src/app/entities/location_record.entity.ts
+
 import {
   Entity,
   Column,
@@ -13,23 +15,24 @@ export class LocationRecord {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'staffNum', type: 'varchar', length: 50 })
+  @Column()
   staffNum: string;
 
-  @ManyToOne(() => User, user => user.records, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'staffNum' })
+  @ManyToOne(() => User, user => user.records)
+  @JoinColumn({ name: 'staffNum', referencedColumnName: 'staffNum' })
   user: User;
 
-  @Column({ name: 'location_id', type: 'int' })
-  locationId: number;
-
-  @ManyToOne(() => Location, loc => loc.records, { onDelete: 'RESTRICT' })
-  @JoinColumn({ name: 'location_id' })
+  @ManyToOne(() => Location, loc => loc.records)
+  @JoinColumn({ name: 'locationId' })
   location: Location;
 
-  @Column({ name: 'start_time', type: 'datetime' })
+  @Column({
+    type: 'datetime',
+    name: 'startTime',
+    default: () => 'CURRENT_TIMESTAMP',  // ← database will auto-stamp on insert
+  })
   startTime: Date;
 
-  @Column({ name: 'end_time', type: 'datetime', nullable: true })
-  endTime?: Date;
+  @Column({ type: 'datetime', name: 'endTime', nullable: true })
+  endTime?: Date | null;
 }
