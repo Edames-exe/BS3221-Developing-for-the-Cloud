@@ -93,6 +93,204 @@ body,
 .link {
   margin-top: 1.25rem;
   font-size: 0.9rem;
+}
+
+.error {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* Stats */
+.stat-item {
+  padding: 0.5rem 0;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.stat-item:last-child {
+  border-bottom: none;
+}
+
+/* Records */
+.records-card {
+  min-height: 100%;
+}
+
+.records-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.record-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 6px;
+}
+
+.record-content {
+  flex: 1;
+}
+
+.end-button {
+  margin: 0;
+  padding: 0.5rem 1rem;
+  background-color: #e74c3c;
+  white-space: nowrap;
+}
+
+.end-button:hover {
+  background-color: #c0392b;
+}
+
+/* Responsive adjustment */
+@media (max-width: 768px) {
+  .record-item {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .end-button {
+    align-self: flex-end;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .content {
+    margin-top: 5rem;
+  }
+
+  .navbar {
+    padding: 0.75rem 1rem;
+  }
+
+  .nav-links {
+    gap: 1rem;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1200px) {
+  .content-grid {
+    grid-template-columns: 360px 360px 360px;
+  }
+
+  .records-grid-item {
+    grid-column: span 1;
+  }
+}
+
+.two-column-layout {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.right-column {
+  height: 100%;
+}
+
+/* Make RecordsCard take full height */
+.records-card {
+  height: calc(100% - 4rem); /* Adjust for padding */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .two-column-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .right-column {
+    height: auto;
+  }
+
+  .records-card {
+    height: auto;
+  }
+}
+.stats-card {
+  padding: 1.5rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #3498db;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #666;
+  text-align: center;
+  margin-top: 0.25rem;
+}
+
+/* Adjust the left column gap */
+.left-column {
+  gap: 1.5rem; /* Reduced from 2rem */
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+  background-color: #3498db;
+}
+
+.login-card {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 400px;
+
   color: #666;
 }
 
@@ -101,3 +299,14 @@ body,
   text-decoration: none;
   font-weight: 500;
 }
+
+.left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0; /* Remove gap since we're using custom spacing */
+}
+
+.form-card-spacing {
+  height: 1.5rem; /* Adjust this value to increase/decrease spacing */
+}
+

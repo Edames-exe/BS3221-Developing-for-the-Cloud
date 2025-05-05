@@ -4,227 +4,197 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import 'apps/website/src/styles.css';
-// Import logo image
 import logo from '../../assets/Univeristy-of-Winchester.webp';
 
-interface LocationOption {
-  id: number;
-  name: string;
-}
+interface LocationOption { id: number; name: string; }
+interface Record { id: number; location: { name: string }; startTime: string; endTime?: string; }
 
-// NavBar component
-function NavBar() {
+const NavBar: React.FC = () => {
   const navigate = useNavigate();
   return (
-    <nav
-      className="card"
-      style={{
-        position: 'fixed',
-        top: '1rem',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        width: 'calc(100% - 2rem)',
-        maxWidth: '1200px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0.5rem 1rem',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-        zIndex: 1000,
-      }}
-    >
-      <div onClick={() => navigate('/home')} style={{ cursor: 'pointer' }}>
-        <img src={logo} alt="University of Winchester Logo" style={{ height: '50px' }} />
-      </div>
-      <ul className="nav-links" style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', gap: '1rem' }}>
-        <li onClick={() => navigate('/home')} style={{ cursor: 'pointer' }}>Home</li>
-        <li onClick={() => navigate('/entries')} style={{ cursor: 'pointer' }}>Entered Records</li>
-        <li style={{ cursor: 'pointer' }}>Other Stuff</li>
-      </ul>
-    </nav>
+    <header className="navbar">
+      <img
+        src={logo}
+        alt="University Logo"
+        className="navbar-logo"
+        onClick={() => navigate('/home')}
+      />
+      <nav>
+        <ul className="nav-links">
+          <li onClick={() => navigate('/home')}>Home</li>
+          <li onClick={() => navigate('/entries')}>Records</li>
+          <li>Other</li>
+        </ul>
+      </nav>
+    </header>
   );
-}
+};
 
-// Entry form component
-const EnterDetailsForm: React.FC = () => {
+const StatsCard: React.FC = () => (
+  <section className="card stats-card">
+    <h2 className="title">Wardens on Site</h2>
+    <div className="stats-grid">
+      <div className="stat-item">
+        <div className="stat-value">5</div>
+        <div className="stat-label">Active Wardens</div>
+      </div>
+      <div className="stat-item">
+        <div className="stat-value">12</div>
+        <div className="stat-label">Areas Covered</div>
+      </div>
+      <div className="stat-item">
+        <div className="stat-value">85%</div>
+        <div className="stat-label">Coverage</div>
+      </div>
+    </div>
+  </section>
+);
+
+const EnterFormCard: React.FC<{ onReportSubmitted?: () => void }> = ({ onReportSubmitted }) => {
   const stored = localStorage.getItem('warden');
-  let initialStaff = '';
-  let initialName = '';
-  if (stored) {
-    try {
-      const obj = JSON.parse(stored);
-      initialStaff = obj.staffNum;
-      initialName = obj.username;
-    } catch {}
-  }
-
-  const [name, setName] = useState(initialName);
-  const [staffNo, setStaffNo] = useState(initialStaff);
+  const { staffNum = '', username = '' } = stored ? JSON.parse(stored) : {};
+  const [name, setName] = useState(username);
+  const [staffNo, setStaffNo] = useState(staffNum);
   const [locations, setLocations] = useState<LocationOption[]>([]);
   const [locationId, setLocationId] = useState<number | ''>('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const navigate = useNavigate();
+  const [message, setMessage] = useState<{ text: string; type: 'error' | 'success' } | null>(null);
 
   useEffect(() => {
-    axios.get<LocationOption[]>('/api/locations')
+    axios.get('/api/locations')
       .then(res => setLocations(res.data))
-      .catch(err => console.error('Failed to load locations:', err));
+      .catch(() => setMessage({ text: 'Failed to load locations', type: 'error' }));
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
-    if (!locationId) {
-      setError('Please select a location.');
-      return;
-    }
+    if (!locationId) return setMessage({ text: 'Select a location', type: 'error' });
     try {
       await axios.post('/api/records', {
-        staffNum: staffNo,
+        staffNum,
         locationId,
         startTime: new Date().toISOString(),
-        endTime: null,
+        endTime: null
       });
-      setSuccess('Record saved successfully');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to save record.');
+      setMessage({ text: 'Record saved', type: 'success' });
+      // Clear form
+      setLocationId('');
+      // Refresh records if callback provided
+      if (onReportSubmitted) onReportSubmitted();
+    } catch {
+      setMessage({ text: 'Save failed', type: 'error' });
     }
   };
 
   return (
-    <div className="card" style={{ flex: 1, minWidth: '300px' }}>
-      <h2 className="title">Enter Details</h2>
-      {error && <div className="login-error">{error}</div>}
-      {success && <div className="login-error" style={{ color: 'green' }}>{success}</div>}
+    <section className="card">
+      <h2 className="title">Enter Location</h2>
+      {message && (
+        <div className={`message ${message.type}`}>
+          {message.text}
+        </div>
+      )}
       <form className="form" onSubmit={handleSubmit}>
-        <label htmlFor="name" className="label">Name:</label>
-        <input
-          id="name"
-          type="text"
-          placeholder="Enter name"
-          className="input"
-          value={name}
-          onChange={e => setName(e.target.value)}
-          required
-        />
-        <label htmlFor="staffNo" className="label">Staff No.:</label>
-        <input
-          id="staffNo"
-          type="text"
-          placeholder="Enter staff number"
-          className="input"
-          value={staffNo}
-          onChange={e => setStaffNo(e.target.value)}
-          required
-        />
-        <label htmlFor="location" className="label">Location:</label>
-        <select
-          id="location"
-          className="input"
-          value={locationId}
-          onChange={e => setLocationId(Number(e.target.value))}
-          required
-        >
-          <option value="">Select location</option>
-          {locations.map(loc => (
-            <option key={loc.id} value={loc.id}>{loc.name}</option>
-          ))}
-        </select>
-        <button type="submit" className="button">Submit</button>
+        <div className="form-group">
+          <label className="label">Name</label>
+          <input className="input" value={name} onChange={e => setName(e.target.value)} required />
+        </div>
+        <div className="form-group">
+          <label className="label">Staff No.</label>
+          <input className="input" value={staffNo} onChange={e => setStaffNo(e.target.value)} required />
+        </div>
+        <div className="form-group">
+          <label className="label">Location</label>
+          <select className="input" value={locationId} onChange={e => setLocationId(Number(e.target.value))} required>
+            <option value="">Select location</option>
+            {locations.map(loc => <option key={loc.id} value={loc.id}>{loc.name}</option>)}
+          </select>
+        </div>
+        <button className="button" type="submit">Submit</button>
       </form>
-    </div>
+    </section>
   );
 };
 
-// Records list component
-const RecordsList: React.FC = () => {
-  const [records, setRecords] = useState<any[]>([]);
+const RecordsCard: React.FC = () => {
+  const [records, setRecords] = useState<Record[]>([]);
   const [error, setError] = useState('');
-  const stored = localStorage.getItem('warden');
-  let staffNum = '';
-  if (stored) {
-    try { staffNum = JSON.parse(stored).staffNum; } catch {};
-  }
+  const staffNum = JSON.parse(localStorage.getItem('warden') || '{}').staffNum;
 
-  const fetchRecords = () => {
+  const load = () => {
     axios.get(`/api/records?staffNum=${staffNum}`)
-      .then(res => setRecords(res.data))
-      .catch(() => setError('Failed to load records'));
+      .then(res => {
+        // Sort by startTime (newest first) and take first 5
+        const sortedRecords = res.data.sort((a: Record, b: Record) =>
+          new Date(b.startTime).getTime() - new Date(a.startTime).getTime()
+        );
+        setRecords(sortedRecords.slice(0, 5));
+      })
+      .catch(() => setError('Could not load records'));
   };
 
-  useEffect(() => { fetchRecords(); }, []);
+  useEffect(load, []);
 
-  const handleEnd = async (id: number) => {
+  const endRecord = async (id: number) => {
     try {
       await axios.patch(`/api/records/${id}`, { endTime: new Date().toISOString() });
-      fetchRecords();
+      load(); // Refresh the list after ending a record
     } catch {
-      setError('Failed to end record');
+      setError('Could not end record');
     }
   };
 
   return (
-    <div className="card" style={{ flex: 1, minWidth: '300px' }}>
-      <h2 className="title">Your Records</h2>
-      {error && <div className="login-error">{error}</div>}
-      <ul style={{ listStyle: 'none', padding: 0 }}>
-        {records.map(rec => (
-          <li key={rec.id} style={{ marginBottom: '1rem', textAlign: 'left' }}>
-            <div><strong>Location:</strong> {rec.location.name}</div>
-            <div><strong>Start:</strong> {new Date(rec.startTime).toLocaleString()}</div>
-            <div><strong>End:</strong> {rec.endTime ? new Date(rec.endTime).toLocaleString() : '—'}</div>
-            {!rec.endTime && (
-              <button
-                className="button"
-                style={{ marginTop: '0.5rem' }}
-                onClick={() => handleEnd(rec.id)}
-              >End</button>
+    <section className="card records-card">
+      <div className="records-header">
+        <h2 className="title">Your Recent Records</h2>
+        {records.length > 0 && (
+          <span className="records-count">{records.length} of 5 shown</span>
+        )}
+      </div>
+      {error && <div className="error">{error}</div>}
+      <ul className="records-list">
+        {records.map(r => (
+          <li key={r.id} className="record-item">
+            <div className="record-content">
+              <div><strong>Location:</strong> {r.location.name}</div>
+              <div><strong>Start:</strong> {new Date(r.startTime).toLocaleString()}</div>
+              <div><strong>End:</strong> {r.endTime ? new Date(r.endTime).toLocaleString() : '—'}</div>
+            </div>
+            {!r.endTime && (
+              <button className="button end-button" onClick={() => endRecord(r.id)}>
+                End
+              </button>
             )}
           </li>
         ))}
       </ul>
-    </div>
+    </section>
   );
 };
 
-// Main HomePage layout: stats + records stacked left, entry form right
 const HomePage: React.FC = () => {
-  return (
-    <div className="background" style={{ paddingTop: '80px', alignItems: 'flex-start' }}>
-      <NavBar />
-      <div
-        className="home-container"
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          gap: '1rem',
-          width: '100%',
-          maxWidth: '1200px',
-          margin: '0 auto',
-          padding: '1rem',
-        }}
-      >
-        {/* Left column: Stats + Records */}
-        <div style={{ flex: 2, display: 'flex', flexDirection: 'column', gap: '1.0rem', minWidth: '300px' }}>
-          {/* Stats Card */}
-          <div className="card">
-            <h2 className="title">No. Wardens on Site</h2>
-            <p>Areas</p>
-            <p>% of rooms covered by wardens</p>
-          </div>
-          {/* Records List Card */}
-          <RecordsList />
-        </div>
+  const [refreshKey, setRefreshKey] = useState(0);
 
-        {/* Right column: Entry Form Card */}
-        <EnterDetailsForm />
-      </div>
+  const handleReportSubmitted = () => {
+    setRefreshKey(prev => prev + 1); // This will force RecordsCard to refresh
+  };
+
+  return (
+    <div className="background">
+      <NavBar />
+      <main className="content">
+        <div className="two-column-layout">
+          <div className="left-column">
+            <StatsCard />
+            <div className="form-card-spacing"></div>
+            <EnterFormCard onReportSubmitted={handleReportSubmitted} />
+          </div>
+          <div className="right-column">
+            <RecordsCard key={refreshKey} />
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
-
 export default HomePage;
