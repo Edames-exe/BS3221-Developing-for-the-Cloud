@@ -1,97 +1,161 @@
-html,
-body,
-#root {
+/* Reset and base styles */
+html, body, #root {
   margin: 0;
   padding: 0;
   height: 100%;
+  font-family: Arial, sans-serif;
 }
-/* full‐screen blue background */
+
+/* Background */
 .background {
   min-height: 100vh;
+  background-color: #3498db;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* Navbar */
+.navbar {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 2rem);
+  max-width: 1200px;
+  background: #fff;
   display: flex;
   align-items: center;
-  justify-content: center;
-  background-color: #3498db;
-  margin: 0;      /* just in case */
-  padding: 0;     /* ditto */
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 1000;
 }
-/* white card */
+
+.navbar-logo {
+  height: 50px;
+  cursor: pointer;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-links li {
+  cursor: pointer;
+  font-weight: 500;
+  color: #333;
+  transition: color 0.2s;
+}
+
+.nav-links li:hover {
+  color: #3498db;
+}
+
+/* Main content */
+.content {
+  margin-top: 6rem;
+  padding: 1rem;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.grid-item {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cards */
 .card {
   background: #fff;
-  padding: 2.5rem 2rem;
-  width: 360px;
+  padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   text-align: center;
+  flex-grow: 1;
 }
 
-/* title */
 .title {
   margin-bottom: 1.5rem;
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 600;
   color: #333;
 }
 
-/* error message */
-.login-error {
-  margin-bottom: 1rem;
-  color: #e74c3c;
-  font-size: 0.9rem;
-}
-
-/* form and inputs */
+/* Forms */
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
 }
 
 .label {
-  text-align: left;
   font-size: 0.9rem;
   color: #555;
+  font-weight: 500;
 }
 
 .input {
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
   font-size: 1rem;
+  transition: border-color 0.2s;
 }
 
-/*!* forgot password link *!*/
-/*.forgot-link {*/
-/*  text-align: right;*/
-/*  font-size: 0.85rem;*/
-/*}*/
+.input:focus {
+  outline: none;
+  border-color: #3498db;
+}
 
-/*.forgot-link a {*/
-/*  color: #3498db;*/
-/*  text-decoration: none;*/
-/*}*/
-
-/* login button */
+/* Buttons */
 .button {
-  margin-top: 0.5rem;
   padding: 0.75rem;
-  width: 100%;
   background-color: #3498db;
   color: #fff;
   border: none;
   font-size: 1rem;
   font-weight: 500;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .button:hover {
   background-color: #2980b9;
 }
 
-/* sign-up link */
-.link {
-  margin-top: 1.25rem;
+.end-button {
+  margin-top: 0.75rem;
+  background-color: #e74c3c;
+}
+
+.end-button:hover {
+  background-color: #c0392b;
+}
+
+/* Messages */
+.message {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  border-radius: 6px;
   font-size: 0.9rem;
 }
 
@@ -290,11 +354,39 @@ body,
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   width: 100%;
   max-width: 400px;
+}
 
+.login-logo {
+  height: 60px;
+  margin: 0 auto 1rem;
+  display: block;
+}
+
+.login-title {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  text-align: center;
+  color: #333;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.login-button {
+  margin-top: 0.5rem;
+}
+
+.login-footer {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  text-align: center;
   color: #666;
 }
 
-.link a {
+.login-footer a {
   color: #3498db;
   text-decoration: none;
   font-weight: 500;
