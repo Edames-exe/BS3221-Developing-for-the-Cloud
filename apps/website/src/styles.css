@@ -9,7 +9,7 @@ html, body, #root {
 /* Background */
 .background {
   min-height: 100vh;
-  background-color: #3498db;
+  background: linear-gradient(to right bottom, #3498db, #2eccc7);
   padding: 1rem;
   box-sizing: border-box;
 }
@@ -344,7 +344,7 @@ html, body, #root {
   align-items: center;
   min-height: 100vh;
   padding: 1rem;
-  background-color: #3498db;
+  background: linear-gradient(to right bottom, #3498db, #2eccc7);
 }
 
 .login-card {
