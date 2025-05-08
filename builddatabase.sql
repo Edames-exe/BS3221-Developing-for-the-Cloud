@@ -19,21 +19,29 @@ CREATE TABLE `locations` (
 
 -- Location records linking users to locations
 CREATE TABLE `location_records` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `staffNum` VARCHAR(50) NOT NULL,
-  `location_id` INT NOT NULL,
-  `start_time` DATETIME NOT NULL,
-  `end_time` DATETIME NULL,
+  `id`          INT           NOT NULL AUTO_INCREMENT,
+  `staffNum`    VARCHAR(50)   NOT NULL,
+  `location_id` INT           NOT NULL,
+  `start_time`  DATETIME      NOT NULL,
+  `end_time`    DATETIME      NULL,
   PRIMARY KEY (`id`),
-  INDEX `idx_records_staffnum` (`staffNum`),
-  INDEX `idx_records_location` (`location_id`),
+  INDEX `idx_records_staffnum`  (`staffNum`),
+  INDEX `idx_records_location`  (`location_id`),
   CONSTRAINT `fk_records_user`
-    FOREIGN KEY (`staffNum`) REFERENCES `users` (`StaffNum`)
-    ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`staffNum`)
+      REFERENCES `users` (`StaffNum`)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE,
   CONSTRAINT `fk_records_location`
-    FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`)
-    ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    FOREIGN KEY (`location_id`)
+      REFERENCES `locations` (`id`)
+      ON DELETE RESTRICT
+      ON UPDATE CASCADE
+)
+  ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_unicode_ci;
+
 
 INSERT INTO `locations` (`name`) VALUES
   ('Alwyn Hall'),
