@@ -10,6 +10,7 @@ import { AppService } from './app.service';
 import { LocationRecord } from './entities/location_record.entity';
 import { RecordsModule } from './modules/records.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import * as fs from 'node:fs';
 
 @Module({
   imports: [
@@ -26,6 +27,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         database: cfg.get('DB_NAME'),
         entities: [User, Location, LocationRecord],
         synchronize: true,
+        ssl: {
+          ca: fs.readFileSync(
+            cfg.get<string>('MYSQL_SSL_CA_PATH') //1
+          ),
+        },
       }),
     }),
     AuthModule,
