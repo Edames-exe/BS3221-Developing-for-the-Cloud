@@ -9,18 +9,24 @@ import { RecordsController } from './controllers/records.controller';
 import { AppService } from './app.service';
 import { LocationRecord } from './entities/location_record.entity';
 import { RecordsModule } from './modules/records.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DB_HOST || 'localhost',
-      port: Number(process.env.DB_PORT) || 3306,
-      username: process.env.DB_USER || 'warden_user',
-      password: process.env.DB_PASS || 'YourUser!Passw0rd',
-      database: process.env.DB_NAME || 'firewarden_db',
-      entities: [User, Location, LocationRecord],
-      synchronize: true,
+    ConfigModule.forRoot({ isGlobal: true }),        // ← loads .env into process.env
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (cfg: ConfigService) => ({
+        type: 'mysql',
+        host: cfg.get('DB_HOST'),
+        port: +cfg.get('DB_PORT'),
+        username: cfg.get('DB_USER'),
+        password: cfg.get('DB_PASS'),
+        database: cfg.get('DB_NAME'),
+        entities: [User, Location, LocationRecord],
+        synchronize: true,
+      }),
     }),
     AuthModule,
     UsersModule,
