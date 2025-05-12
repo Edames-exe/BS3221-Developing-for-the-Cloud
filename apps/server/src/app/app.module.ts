@@ -29,7 +29,7 @@ import * as fs from 'node:fs';
         synchronize: true,
         ssl: {
           ca: fs.readFileSync(
-            cfg.get<string>('MYSQL_SSL_CA_PATH') //1
+            cfg.get<string>('MYSQL_SSL_CA_PATH')
           ),
         },
       }),
