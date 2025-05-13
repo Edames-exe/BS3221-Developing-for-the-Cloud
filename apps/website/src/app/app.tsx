@@ -5,6 +5,7 @@ import LoginPage from './pages/loginPage';
 import RegisterPage from './pages/registerPage';
 import HomePage from './pages/homePage';
 import RequireAuth from './components/requireAuth';
+import RecordsPage from './pages/recordsPage';
 
 const App: React.FC = () => (
   <Routes>
@@ -21,6 +22,14 @@ const App: React.FC = () => (
         </RequireAuth>
       }
     />
+    <Route
+         path="/records"
+         element={
+           <RequireAuth>
+               <RecordsPage />
+             </RequireAuth>
+         }
+       />
 
     {/* Catch-all */}
     <Route path="*" element={<Navigate to="/" replace />} />

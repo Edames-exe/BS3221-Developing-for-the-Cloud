@@ -22,8 +22,7 @@ const NavBar: React.FC = () => {
       <nav>
         <ul className="nav-links">
           <li onClick={() => navigate('/home')}>Home</li>
-          <li onClick={() => navigate('/entries')}>Records</li>
-          <li>Other</li>
+          <li onClick={() => navigate('/records')}>Records</li>
         </ul>
       </nav>
     </header>

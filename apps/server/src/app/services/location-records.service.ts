@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { LocationRecord } from '../entities/location_record.entity';
 import { CreateLocationRecordDto } from '../DTOs/createLocationRecord.dto';
 import { UpdateLocationRecordDto } from '../DTOs/updateLocationRecord.dto';
+import { Location } from '../entities/location.entity';
 
 @Injectable()
 export class LocationRecordsService {
@@ -30,14 +31,37 @@ export class LocationRecordsService {
     });
   }
 
-  async update(id: number, dto: UpdateLocationRecordDto): Promise<LocationRecord> {
-    const record = await this.recordsRepo.findOne({ where: { id } });
+  async update(
+    id: number,
+    dto: UpdateLocationRecordDto,
+  ): Promise<LocationRecord> {
+    // 1) find to ensure it exists
+    const record = await this.recordsRepo.findOne({
+      where: { id },
+      relations: ['location'],
+    });
     if (!record) {
       throw new NotFoundException(`Record with id ${id} not found`);
     }
-    if (dto.endTime !== undefined) {
-      record.endTime = new Date(dto.endTime);
+
+    // 2) apply changes
+    if (dto.locationId !== undefined) {
+      // set the relation directly
+      record.location = { id: dto.locationId } as Location;
+      record.staffNum = record.staffNum; // keep staffNum unchanged
     }
+    if (dto.endTime !== undefined) {
+      record.endTime = dto.endTime ? new Date(dto.endTime) : null;
+    }
+
+    // 3) persist and return
     return this.recordsRepo.save(record);
+  }
+
+  async remove(id: number): Promise<void> {
+    const result = await this.recordsRepo.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Record with id ${id} not found`);
+    }
   }
 }
