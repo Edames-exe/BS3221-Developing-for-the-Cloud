@@ -109,7 +109,8 @@ const RecordsPage: React.FC = () => {
     <div className="background">
       <header className="navbar">
         <img
-          src={logo} alt="Logo"
+          src={logo}
+          alt="University Logo"
           className="navbar-logo"
           onClick={() => navigate('/home')}
         />
@@ -121,87 +122,86 @@ const RecordsPage: React.FC = () => {
         </nav>
       </header>
 
-      <div style={{ padding: '80px 1rem 2rem' }}>
-        <section
-          className="card"
-          style={{ width: '80%', maxWidth: '1200px', margin: '0 auto' }}
-        >
+      <main className="content" style={{ paddingTop: '80px' }}>
+        <div className="card" style={{ width: '80%', maxWidth: '1200px', margin: '0 auto' }}>
           <h2 className="title">All Your Records</h2>
           {loading ? (
-            <p>Loading…</p>
+            <div className="loading">Loading records...</div>
           ) : error ? (
-            <p style={{ color: 'red' }}>{error}</p>
+            <div className="error">{error}</div>
           ) : !records.length ? (
-            <p>No records found.</p>
+            <div className="no-records">No records found.</div>
           ) : (
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead>
-              <tr>
-                <th style={thStyle}>Location</th>
-                <th style={thStyle}>Start Time</th>
-                <th style={thStyle}>End Time</th>
-                <th style={thStyle}>Actions</th>
-              </tr>
-              </thead>
-              <tbody>
-              {records.map(r => (
-                <tr key={r.id}>
-                  {editingId === r.id ? (
-                    <>
-                      <td style={tdStyle}>
-                        <select
-                          className="input"
-                          value={editLocationId}
-                          onChange={e => setEditLocationId(Number(e.target.value))}
-                        >
-                          <option value="">Select…</option>
-                          {locations.map(loc => (
-                            <option key={loc.id} value={loc.id}>{loc.name}</option>
-                          ))}
-                        </select>
-                      </td>
-                      <td style={tdStyle}>
-                        {new Date(r.startTime).toLocaleString()}
-                      </td>
-                      <td style={tdStyle}>
-                        <input
-                          type="datetime-local"
-                          className="input"
-                          value={editEndTime}
-                          onChange={e => setEditEndTime(e.target.value)}
-                        />
-                      </td>
-                      <td style={tdStyle}>
-                        <button className="button" onClick={saveEdit} style={{ marginRight: '0.5rem' }}>
-                          Save
-                        </button>
-                        <button className="button" onClick={cancelEdit}>
-                          Cancel
-                        </button>
-                      </td>
-                    </>
-                  ) : (
-                    <>
-                      <td style={tdStyle}>{r.location.name}</td>
-                      <td style={tdStyle}>{new Date(r.startTime).toLocaleString()}</td>
-                      <td style={tdStyle}>{r.endTime ? new Date(r.endTime).toLocaleString() : '—'}</td>
-                      <td style={tdStyle}>
-                        <button className="button" onClick={() => deleteRecord(r.id)} style={{ marginRight: '0.5rem' }}>
-                          Delete
-                        </button>
-                        <button className="button" onClick={() => startEdit(r)}>
-                          Edit
-                        </button>
-                      </td>
-                    </>
-                  )}
+            <div className="records-table-container">
+              <table className="records-table">
+                <thead>
+                <tr>
+                  <th>Location</th>
+                  <th>Start Time</th>
+                  <th>End Time</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                {records.map(r => (
+                  <tr key={r.id}>
+                    {editingId === r.id ? (
+                      <>
+                        <td>
+                          <select
+                            className="input"
+                            value={editLocationId}
+                            onChange={e => setEditLocationId(Number(e.target.value))}
+                          >
+                            <option value="">Select location</option>
+                            {locations.map(loc => (
+                              <option key={loc.id} value={loc.id}>{loc.name}</option>
+                            ))}
+                          </select>
+                        </td>
+                        <td>
+                          {new Date(r.startTime).toLocaleString()}
+                        </td>
+                        <td>
+                          <input
+                            type="datetime-local"
+                            className="input"
+                            value={editEndTime}
+                            onChange={e => setEditEndTime(e.target.value)}
+                          />
+                        </td>
+                        <td className="actions-cell">
+                          <button className="button" onClick={saveEdit}>
+                            Save
+                          </button>
+                          <button className="button" onClick={cancelEdit}>
+                            Cancel
+                          </button>
+                        </td>
+                      </>
+                    ) : (
+                      <>
+                        <td>{r.location.name}</td>
+                        <td>{new Date(r.startTime).toLocaleString()}</td>
+                        <td>{r.endTime ? new Date(r.endTime).toLocaleString() : '—'}</td>
+                        <td className="actions-cell">
+                          <button className="delete-button" onClick={() => deleteRecord(r.id)} style={{ marginRight: '0.5rem' }}>
+                            Delete
+                          </button>
+                          <button className="button" onClick={() => startEdit(r)}>
+                            Edit
+                          </button>
+                        </td>
+                      </>
+                    )}
+                  </tr>
+                ))}
+                </tbody>
+              </table>
+            </div>
           )}
-        </section>
-      </div>
+        </div>
+      </main>
     </div>
   );
 };
