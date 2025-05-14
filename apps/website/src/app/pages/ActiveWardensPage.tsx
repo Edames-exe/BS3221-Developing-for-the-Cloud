@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import 'apps/website/src/styles.css';
 import logo from '../../assets/Univeristy-of-Winchester.webp';
 
@@ -66,44 +67,41 @@ const ActiveWardensPage: React.FC = () => {
   return (
     <div className="background">
       <NavBar />
-      <div style={{ padding: '80px 1rem 2rem' }}>
-        <section
-          className="card"
-          style={{ width: '80%', maxWidth: '800px', margin: '0 auto' }}
-        >
+      <main className="content">
+        <div className="card" style={{ width: '80%', maxWidth: '1200px', margin: '0 auto' }}>
           <h2 className="title">Open Records</h2>
           {loading ? (
-            <p>Loading…</p>
+            <div className="loading">Loading active wardens...</div>
           ) : error ? (
-            <p style={{ color: 'red' }}>{error}</p>
+            <div className="error">{error}</div>
           ) : wardens.length === 0 ? (
-            <p>No open records found.</p>
+            <div className="no-records">No open records found.</div>
           ) : (
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead>
-              <tr>
-                <th style={thStyle}>Staff #</th>
-                <th style={thStyle}>Username</th>
-                <th style={thStyle}>Location</th>
-                <th style={thStyle}>Start Time</th>
-              </tr>
-              </thead>
-              <tbody>
-              {wardens.map(w => (
-                <tr key={w.staffNum + w.startTime}>
-                  <td style={tdStyle}>{w.staffNum}</td>
-                  <td style={tdStyle}>{w.username}</td>
-                  <td style={tdStyle}>{w.location}</td>
-                  <td style={tdStyle}>
-                    {new Date(w.startTime).toLocaleString()}
-                  </td>
+            <div className="records-table-container">
+              <table className="records-table">
+                <thead>
+                <tr>
+                  <th>Staff #</th>
+                  <th>Username</th>
+                  <th>Location</th>
+                  <th>Start Time</th>
                 </tr>
-              ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                {wardens.map(w => (
+                  <tr key={w.staffNum + w.startTime}>
+                    <td>{w.staffNum}</td>
+                    <td>{w.username}</td>
+                    <td>{w.location}</td>
+                    <td>{new Date(w.startTime).toLocaleString()}</td>
+                  </tr>
+                ))}
+                </tbody>
+              </table>
+            </div>
           )}
-        </section>
-      </div>
+        </div>
+      </main>
     </div>
   );
 };
