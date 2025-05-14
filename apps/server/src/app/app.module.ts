@@ -28,11 +28,11 @@ import { StatsModule } from './modules/stats.module';
         database: cfg.get('DB_NAME'),
         entities: [User, Location, LocationRecord],
         synchronize: true,
-      //   ssl: {
-      //     ca: fs.readFileSync(
-      //       cfg.get<string>('MYSQL_SSL_CA_PATH')
-      //     ),
-      //   },
+        ssl: {
+          ca: fs.readFileSync(
+            cfg.get<string>('MYSQL_SSL_CA_PATH')
+          ),
+        },
       }),
     }),
     AuthModule,
