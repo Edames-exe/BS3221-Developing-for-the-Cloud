@@ -10,6 +10,8 @@ interface LocationOption { id: number; name: string; }
 interface Record { id: number; location: { name: string }; startTime: string; endTime?: string; }
 
 const NavBar: React.FC = () => {
+  const stored = localStorage.getItem('warden');
+  const isAdmin = stored ? JSON.parse(stored).isAdmin : false;
   const navigate = useNavigate();
   return (
     <header className="navbar">
@@ -23,6 +25,9 @@ const NavBar: React.FC = () => {
         <ul className="nav-links">
           <li onClick={() => navigate('/home')}>Home</li>
           <li onClick={() => navigate('/records')}>Records</li>
+           {isAdmin && (
+             <li onClick={() => navigate('/active-wardens')}>Active Wardens</li>
+           )}
         </ul>
       </nav>
     </header>

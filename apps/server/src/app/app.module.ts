@@ -11,6 +11,7 @@ import { LocationRecord } from './entities/location_record.entity';
 import { RecordsModule } from './modules/records.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as fs from 'node:fs';
+import { StatsModule } from './modules/stats.module';
 
 @Module({
   imports: [
@@ -27,17 +28,18 @@ import * as fs from 'node:fs';
         database: cfg.get('DB_NAME'),
         entities: [User, Location, LocationRecord],
         synchronize: true,
-        ssl: {
-          ca: fs.readFileSync(
-            cfg.get<string>('MYSQL_SSL_CA_PATH')
-          ),
-        },
+      //   ssl: {
+      //     ca: fs.readFileSync(
+      //       cfg.get<string>('MYSQL_SSL_CA_PATH')
+      //     ),
+      //   },
       }),
     }),
     AuthModule,
     UsersModule,
     LocationsModule,
     RecordsModule,
+    StatsModule
   ],
   controllers: [RecordsController],
   providers: [AppService],

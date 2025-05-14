@@ -6,6 +6,8 @@ import RegisterPage from './pages/registerPage';
 import HomePage from './pages/homePage';
 import RequireAuth from './components/requireAuth';
 import RecordsPage from './pages/recordsPage';
+import ActiveWardensPage from './pages/ActiveWardensPage';
+import AdminRoute from './components/AdminRoute';
 
 const App: React.FC = () => (
   <Routes>
@@ -23,13 +25,23 @@ const App: React.FC = () => (
       }
     />
     <Route
-         path="/records"
-         element={
-           <RequireAuth>
-               <RecordsPage />
-             </RequireAuth>
-         }
-       />
+     path="/records"
+     element={
+       <RequireAuth>
+           <RecordsPage />
+         </RequireAuth>
+      }
+     />
+     <Route
+       path="/active-wardens"
+       element={
+         <RequireAuth>
+             <AdminRoute>
+               <ActiveWardensPage />
+             </AdminRoute>
+           </RequireAuth>
+       }
+     />
 
     {/* Catch-all */}
     <Route path="*" element={<Navigate to="/" replace />} />

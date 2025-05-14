@@ -5,7 +5,8 @@ import axios from 'axios';
 import 'apps/website/src/styles.css';
 
 // Configure Axios if not already set globally
-axios.defaults.baseURL = 'http://cloud-computing-backend.fac0djfpbcbscmha.uksouth.azurecontainer.io:3000';
+// axios.defaults.baseURL = 'http://cloud-computing-backend.fac0djfpbcbscmha.uksouth.azurecontainer.io:3000'; //cloud link
+axios.defaults.baseURL = 'http://localhost:3000'; //local Link
 
 const RegisterPage: React.FC = () => {
   const [staffNum, setStaffNum] = useState('');

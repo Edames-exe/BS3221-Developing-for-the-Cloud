@@ -29,7 +29,8 @@ const RecordsPage: React.FC = () => {
   const [editEndTime, setEditEndTime] = useState<string>('');
   const navigate = useNavigate();
   const staffNum = JSON.parse(localStorage.getItem('warden') || '{}').staffNum;
-
+  const stored = localStorage.getItem('warden');
+  const isAdmin = stored ? JSON.parse(stored).isAdmin : false;
 
   const deleteRecord = async (id: number) => {
     // eslint-disable-next-line no-restricted-globals
@@ -118,6 +119,9 @@ const RecordsPage: React.FC = () => {
           <ul className="nav-links">
             <li onClick={() => navigate('/home')}>Home</li>
             <li onClick={() => navigate('/records')}>Records</li>
+            {isAdmin && (
+              <li onClick={() => navigate('/active-wardens')}>Active Wardens</li>
+            )}
           </ul>
         </nav>
       </header>
